@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Header } from "@/components/pages/home/Header";
 import { TodoInput } from "@/components/pages/home/TodoInput";
@@ -9,6 +9,21 @@ import { TodoList } from "@/components/pages/home/TodoList";
 export default function TodoApp() {
   // 状態（データ）の管理
   const [todos, setTodos] = useState([]); // タスクの一覧
+
+  // コンポーネントが最初に表示されたときに実行される処理
+  useEffect(() => {
+    // LocalStorageからデータを読み込む
+    const savedTodos = localStorage.getItem("todos");
+    if (savedTodos) {
+      setTodos(JSON.parse(savedTodos));
+    }
+  }, []); // 空の配列 [] は「最初の1回だけ実行」という意味
+
+  // todosが変更されたときに実行される処理
+  useEffect(() => {
+    // ブラウザのLocalStorageにデータを保存
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]); // [todos] →「todosが変更されたときに実行」という意味
 
   // 新しいタスクを追加する関数
   const addTodo = (text) => {
